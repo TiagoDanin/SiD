@@ -1,16 +1,16 @@
  -- Thanks to @TiagoDanin for writing the original plugin.
 
-if not config.google_api_key then
+if not key.google_api_key then
 	print('Missing config value: google_api_key.')
 	print('youtube.lua will not be enabled.')
 	return
 end
 
-local command = 'youtube <query>'
+local command = 'youtube <$query*>'
 local doc = [[```
-/youtube <query>
-Returns the top result from YouTube.
-Alias: /yt
+/youtube <$query*>
+$doc_youtube*
+$alias*: /yt
 ```]]
 
 local triggers = {
@@ -26,12 +26,12 @@ local action = function(msg)
 		if msg.reply_to_message and msg.reply_to_message.text then
 			input = msg.reply_to_message.text
 		else
-			sendMessage(msg.chat.id, doc, true, msg.message_id, true)
+			sendMessage(msg.chat.id, sendLang(doc, lang), true, msg.message_id, true)
 			return
 		end
 	end
 
-	local url = 'https://www.googleapis.com/youtube/v3/search?key=' .. config.google_api_key .. '&type=video&part=snippet&maxResults=4&q=' .. URL.escape(input)
+	local url = 'https://www.googleapis.com/youtube/v3/search?key=' .. key.google_api_key .. '&type=video&part=snippet&maxResults=4&q=' .. URL.escape(input)
 
 	local jstr, res = HTTPS.request(url)
 	if res ~= 200 then
@@ -46,10 +46,7 @@ local action = function(msg)
 	end
 
 	local i = math.random(jdat.pageInfo.resultsPerPage)
-	local vid_url = 'https://www.youtube.com/watch?v=' .. jdat.items[i].id.videoId
-	local vid_title = jdat.items[i].snippet.title
-	vid_title = vid_title:gsub('%(.+%)',''):gsub('%[.+%]','')
-	local output = '[' .. vid_title .. '](' .. vid_url .. ')'
+	local output = '[​](https://www.youtube.com/watch?v=' .. jdat.items[i].id.videoId .. ')'
 
 	sendMessage(msg.chat.id, output, false, nil, true)
 

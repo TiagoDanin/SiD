@@ -1,27 +1,23 @@
-local command = 'reddit [r/subreddit | query]'
+local command = 'reddit [r/subreddit | $query*]'
 local doc = [[```
-/reddit [r/subreddit | query]
-Returns the four (if group) or eight (if private message) top posts for the given subreddit or query, or from the frontpage.
-Aliases: /r, /r/[subreddit]
+/reddit [r/subreddit | $query*]
+$doc_reddit*
+$alias*: /r, /r/[subreddit]
 ```]]
 
 local triggers = {
 	'^/reddit[@'..bot.username..']*',
-	'^/r[@'..bot.username..']*$',
+	'^/r@'..bot.username..'$',
+	'^/r$',
 	'^/r[@'..bot.username..']* ',
 	'^/r/'
 }
 
 local action = function(msg)
+	print(bot.username)
 
 	msg.text_lower = msg.text_lower:gsub('/r/', '/r r/')
 	local input = msg.text_lower:input()
-	if msg.text_lower:match('^/r/') then
-		msg.text_lower = msg.text_lower:gsub('/r/', '/r r/')
-		input = get_word(msg.text_lower, 1)
-	else
-		input = msg.text_lower:input()
-	end
 	local url
 
 	local limit = 4
@@ -32,11 +28,11 @@ local action = function(msg)
 	local source
 	if input then
 		if input:match('^r/.') then
-			url = 'http://www.reddit.com/' .. URL.escape(input) .. '/.json?limit=' .. limit
+			url = 'http://www.reddit.com/' .. URL.escape(get_word(input, 1)) .. '/.json?limit=' .. limit
 			source = '*/r/' .. input:match('^r/(.+)') .. '*\n'
 		else
 			url = 'http://www.reddit.com/search.json?q=' .. URL.escape(input) .. '&limit=' .. limit
-			source = '*reddit results for* _' .. input .. '_ *:*\n'
+			source = '*reddit $results** _' .. input .. '_ *:*\n'
 		end
 	else
 		url = 'http://www.reddit.com/.json?limit=' .. limit
@@ -57,7 +53,7 @@ local action = function(msg)
 
 	local output = ''
 	for i,v in ipairs(jdat.data.children) do
-		local title = v.data.title:gsub('%[', '('):gsub('%]', ')'):gsub('&amp;', '&')
+		local title = v.data.title:gsub('%[.+%]', ''):gsub('&amp;', '&')
 		if title:len() > 48 then
 			title = title:sub(1,45) .. '...'
 		end
@@ -66,14 +62,14 @@ local action = function(msg)
 		end
 		local short_url = 'redd.it/' .. v.data.id
 		output = output .. '• [' .. title .. '](' .. short_url .. ')\n'
-		if not v.data.is_self then
-			output = output .. v.data.url:gsub('_', '\\_') .. '\n'
-		end
+		--if not v.data.is_self then
+			--output = output .. v.data.url:gsub('_', '\\_') .. '\n'
+		--end
 	end
 
 	output = source .. output
 
-	sendMessage(msg.chat.id, output, true, nil, true)
+	sendMessage(msg.chat.id, sendLang(output, lang), true, nil, true)
 
 end
 

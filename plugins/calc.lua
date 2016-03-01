@@ -1,7 +1,7 @@
-local command = 'calc <expression>'
+local command = 'calc <$expression*>'
 local doc = [[```
-/calc <expression>
-Returns solutions to mathematical expressions and conversions between common units. Results provided by mathjs.org.
+/calc <$expression*>
+$doc_calc*
 ```]]
 
 local triggers = {
@@ -15,7 +15,7 @@ local action = function(msg)
 		if msg.reply_to_message and msg.reply_to_message.text then
 			input = msg.reply_to_message.text
 		else
-			sendMessage(msg.chat.id, doc, true, msg.message_id, true)
+			sendMessage(msg.chat.id, sendLang(doc, lang), true, msg.message_id, true)
 			return
 		end
 	end

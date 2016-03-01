@@ -1,20 +1,16 @@
-if not config.lastfm_api_key then
+if not key.lastfm_api_key then
 	print('Missing config value: lastfm_api_key.')
 	print('lastfm.lua will not be enabled.')
 	return
 end
 
-if not database.lastfm then
-	database.lastfm = {}
-end
-
 local command = 'lastfm'
 local doc = [[```
 /np [username]
-Returns what you are or were last listening to. If you specify a username, info will be returned for that username.
+$fm_doc_np*
 
 /fmset <username>
-Sets your last.fm username. Otherwise, /np will use your Telegram username. Use "/fmset -" to delete it.
+$fm_doc_set*
 ```]]
 
 local triggers = {
@@ -25,38 +21,41 @@ local triggers = {
 
 local action = function(msg)
 
+	lastfm = load_data('lastfm.json')
 	local input = msg.text:input()
 
 	if string.match(msg.text, '^/lastfm') then
-		sendMessage(msg.chat.id, doc, true, msg.message_id, true)
+		sendMessage(msg.chat.id, sendLang(doc, lang), true, msg.message_id, true)
 		return
 	elseif string.match(msg.text, '^/fmset') then
 		if not input then
-			sendMessage(msg.chat.id, doc, true, msg.message_id, true)
+			sendMessage(msg.chat.id, sendLang(doc, lang), true, msg.message_id, true)
 		elseif input == '-' then
-			database.lastfm[msg.from.id_str] = nil
-			sendReply(msg, 'Your last.fm username has been forgotten.')
+			lastfm[msg.from.id_str] = nil
+			sendReply(msg, sendLang('$deleted*', lang))
 		else
-			database.lastfm[msg.from.id_str] = input
-			sendReply(msg, 'Your last.fm username has been set to "' .. input .. '".')
+			lastfm[msg.from.id_str] = input
+			sendReply(msg, sendLang('$add*', lang))
 		end
+		save_data('lastfm.json', lastfm)
 		return
 	end
 
-	local url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&format=json&limit=1&api_key=' .. config.lastfm_api_key .. '&user='
+	local url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&format=json&limit=1&api_key=' .. key.lastfm_api_key .. '&user='
 
 	local username
 	local output = ''
 	if input then
 		username = input
-	elseif database.lastfm[msg.from.id_str] then
-		username = database.lastfm[msg.from.id_str]
+	elseif lastfm[msg.from.id_str] then
+		username = lastfm[msg.from.id_str]
 	elseif msg.from.username then
 		username = msg.from.username
-		output = '\n\nYour username has been set to ' .. username .. '.\nTo change it, use /fmset <username>.'
-		database.lastfm[msg.from.id_str] = username
+		output = '\n\n$fm_set* ' .. username .. '.\n$fm_ch* /fmset <$username*>.'
+		lastfm[msg.from.id_str] = username
+		save_data('lastfm.json', lastfm)
 	else
-		sendReply(msg, 'Please specify your last.fm username or set it with /fmset.')
+		sendReply(msg, sendLang('$fm_pls_ch*', lang))
 		return
 	end
 
@@ -70,13 +69,13 @@ local action = function(msg)
 
 	local jdat = JSON.decode(jstr)
 	if jdat.error then
-		sendReply(msg, 'Please specify your last.fm username or set it with /fmset.')
+		sendReply(msg, sendLang('$fm_pls_ch*', lang))
 		return
 	end
 
 	local jdat = jdat.recenttracks.track[1] or jdat.recenttracks.track
 	if not jdat then
-		sendReply(msg, 'No history for this user.' .. output)
+		sendReply(msg, sendLang('$fm_not_h* ' .. output, lang))
 		return
 	end
 
@@ -84,9 +83,9 @@ local action = function(msg)
 	message = '🎵  ' .. message
 
 	if jdat['@attr'] and jdat['@attr'].nowplaying then
-		message = message .. ' is currently listening to:\n'
+		message = message .. ' $fm_last*:\n'
 	else
-		message = message .. ' last listened to:\n'
+		message = message .. ' $fm_last_*:\n'
 	end
 
 	local title = jdat.name or 'Unknown'
@@ -96,7 +95,7 @@ local action = function(msg)
 	end
 
 	message = message .. title .. ' - ' .. artist .. output
-	sendMessage(msg.chat.id, message)
+	sendMessage(msg.chat.id, sendLang(message, lang))
 
 end
 

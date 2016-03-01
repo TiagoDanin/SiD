@@ -1,10 +1,11 @@
-local command = 'imdb <query>'
+local command = 'tv <$query*>'
 local doc = [[```
-/imdb <query>
-Returns an IMDb entry.
+/tv <$query*>
+$doc_tv*
 ```]]
 
 local triggers = {
+	'^/tv[@'..bot.username..']*',
 	'^/imdb[@'..bot.username..']*'
 }
 
@@ -15,7 +16,7 @@ local action = function(msg)
 		if msg.reply_to_message and msg.reply_to_message.text then
 			input = msg.reply_to_message.text
 		else
-			sendMessage(msg.chat.id, doc, true, msg.message_id, true)
+			sendMessage(msg.chat.id, sendLang(doc, lang), true, msg.message_id, true)
 			return
 		end
 	end
@@ -35,12 +36,12 @@ local action = function(msg)
 		return
 	end
 
-	local output = '[' .. jdat.Title .. '](http://imdb.com/title/'
+	local output = '🎬[' .. jdat.Title .. '](http://imdb.com/title/'
 	output = output .. jdat.imdbID .. ') ('.. jdat.Year ..')\n'
-	output = output .. jdat.imdbRating ..'/10 | '.. jdat.Runtime ..' | '.. jdat.Genre ..'\n'
-	output = output .. jdat.Plot
+	output = output .. '⭐️'..jdat.imdbRating ..'/10 |⏱ '.. jdat.Runtime ..' |🚩 '.. jdat.Genre ..'\n'
+	output = output .. '👤 $director*: ' .. jdat.Director .. '\n👥 $actors*: ' .. jdat.Actors
 
-	sendMessage(msg.chat.id, output, true, nil, true)
+	sendMessage(msg.chat.id, sendLang(output, lang), true, nil, true)
 
 end
 

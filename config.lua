@@ -1,112 +1,70 @@
 return {
-	bot_api_key = '',
-	google_api_key = '',
-	google_cse_key = '',
-	lastfm_api_key = '',
-	owm_api_key = '',
-	biblia_api_key = '',
-	thecatapi_key = '',
-	nasa_api_key = '',
-	yandex_key = '',
-	simsimi_key = '',
-	simsimi_trial = true,
-	time_offset = 0,
+	time_offset = 5,
 	lang = 'en',
-	-- If you change this, make sure you also modify launch-tg.sh.
+	antisquig = false,
 	cli_port = 4567,
-	admin = 00000000,
-	admin_name = 'John Smith',
-	log_chat = nil,
-	about_text = [[
-I am otouto, the plugin-wielding, multi-purpose Telegram bot.
 
-Send /help to get started.
-]]	,
-	errors = {
-		connection = 'Connection error.',
-		results = 'No results found.',
-		argument = 'Invalid argument.',
-		syntax = 'Invalid syntax.',
-		chatter_connection = 'I don\'t feel like talking right now.',
-		chatter_response = 'I don\'t know what to say to that.'
+	max_command = 4,
+
+	version = 'V4.2.0G', --B = Beta, S = Slable, L = Lang, F = FIX -- G = GitHub
+	debug = true,  -- False disable
+	debug = {
+		chat = -1001022293201
 	},
-	greetings = {
-		['Hello, #NAME.'] = {
-			'hello',
-			'hey',
-			'sup',
-			'hi',
-			'good morning',
-			'good day',
-			'good afternoon',
-			'good evening'
-		},
-		['Goodbye, #NAME.'] = {
-			'bye',
-			'later',
-			'see ya',
-			'good night'
-		},
-		['Welcome back, #NAME.'] = {
-			'i\'m home',
-			'i\'m back'
-		},
-		['You\'re welcome, #NAME.'] = {
-			'thanks',
-			'thank you'
-		}
-	},
+
+	admin = 89198119,
+	bot_test = 00000000,
+	admin_name = 'Tiago Danin',
 	moderation = {
 		admins = {
-			['00000000'] = 'You'
+			['89198119'] = 'Tiago Danin'
 		},
-		errors = {
-			antisquig = 'This group is English-only.',
-			moderation = 'I do not moderate this group.',
-			not_mod = 'This command must be run by a moderator.',
-			not_admin = 'This command must be run by an administrator.',
-		},
-		admin_group = -00000000,
-		realm_name = 'My Realm',
-		antisquig = false
+		admin_group = -000000000,
+		realm_name = 'SIDx'
 	},
+
+	errors = {
+		connection = '🚫 404:Connection',
+		results = 'No results found.',
+		argument = '🚫 Invalid argument.',
+		syntax = 'Invalid syntax.',
+		antisquig = '🚫 ERRO',
+		moderation = '🚫 MOD',
+		not_mod = '🚫 Super MOD',
+		not_admin = '🚫 ADMIN',
+		chatter_connection = '🚫 ',
+		chatter_response = '🚫 '
+	},
+
 	plugins = {
 		'control.lua',
+		'admin.lua',
 		'blacklist.lua',
-		'about.lua',
-		'floodcontrol.lua',
+		'info.lua',
+		'lang.lua',
 		'ping.lua',
 		'whoami.lua',
+		'emoji.lua',
 		'nick.lua',
 		'echo.lua',
-		'gSearch.lua',
-		'gImages.lua',
-		'gMaps.lua',
+		'search.lua',
 		'youtube.lua',
+		'spotify.lua',
+		'lastfm.lua',
 		'wikipedia.lua',
-		'hackernews.lua',
-		'imdb.lua',
+		'tv.lua',
 		'calc.lua',
-		'urbandictionary.lua',
 		'time.lua',
-		'eightball.lua',
-		'reactions.lua',
-		'dice.lua',
+		'infoMe.lua',
+		'note.lua',
 		'reddit.lua',
-		'xkcd.lua',
-		'slap.lua',
-		'commit.lua',
-		'pun.lua',
-		'pokedex.lua',
-		'bandersnatch.lua',
-		'currency.lua',
-		'cats.lua',
-		'hearthstone.lua',
-		'shout.lua',
-		'apod.lua',
-		'patterns.lua',
-		-- Put new plugins above this line.
+		'preview.lua',
+		-- INLINE
+		'inline.lua',
+		-- + Plugins
+		'sos.lua',
 		'help.lua',
-		'greetings.lua'
+		'rank.lua',
+		'command.lua'
 	}
 }

@@ -1,24 +1,28 @@
  -- This plugin should go at the end of your plugin list in
  -- config.lua, but not after greetings.lua.
 
-local help_text = '*Available commands:*'
+local help_text = '📌*$HAC*:*'
 
+local n = 0
 for i,v in ipairs(plugins) do
 	if v.command then
-		help_text = help_text .. '\n• /' .. v.command:gsub('%[', '\\[')
+		n = n + 1
+		help_text = help_text .. '\n*'..n..'.* /' .. v.command:gsub('%[', '\\[')
 	end
 end
 
+help_text = help_text .. '\n*'..(n + 1)..'.* /command <$set-command*> <$text*>'
+help_text = help_text .. '\n\n*$total*:* ' .. n + 1
 help_text = help_text .. [[
 
-• /help <command>
-Arguments: <required> \[optional]
+*$details*:* `/$help* <$command*>`
+*$arguments*:* `<$required*> [$optional*]`
 ]]
 
 local triggers = {
 	'^/help[@'..bot.username..']*',
 	'^/h[@'..bot.username..']*$',
-	'^/start[@'..bot.username..']*'
+	'^/ajuda[@'..bot.username..']*'
 }
 
 local action = function(msg)
@@ -28,24 +32,36 @@ local action = function(msg)
 	-- Attempts to send the help message via PM.
 	-- If msg is from a group, it tells the group whether the PM was successful.
 	if not input then
-		local res = sendMessage(msg.from.id, help_text, true, nil, true)
+		local res = sendMessage(msg.from.id, sendLang(help_text, lang), true, nil, true)
 		if not res then
-			sendReply(msg, 'Please message me privately for a list of commands.')
+			sendReply(msg, sendLang('$pmp*', lang))
 		elseif msg.chat.type ~= 'private' then
-			sendReply(msg, 'I have sent you the requested information in a private message.')
+			sendReply(msg, sendLang('$pmh*', lang))
 		end
 		return
 	end
-
+	
+	if input:match('^[1234567890]*$') then
+		local n_cmd = ''
+		local convert = 0 + input -- Convert to number
+		
+		for i,v in ipairs(plugins) do
+			if v.command then
+				n_cmd = n_cmd .. get_word(v.command, 1) .. ' '
+			end
+		end
+		input = get_word(n_cmd, convert)
+	end
+	
 	for i,v in ipairs(plugins) do
 		if v.command and get_word(v.command, 1) == input and v.doc then
-			local output = '*Help for* _' .. get_word(v.command, 1) .. '_ *:*\n' .. v.doc
-			sendMessage(msg.chat.id, output, true, nil, true)
+			local output = '*$H_for** _' .. get_word(v.command, 1) .. '_ *:*\n' .. v.doc
+			sendMessage(msg.chat.id, sendLang(output, lang), true, nil, true)
 			return
 		end
 	end
 
-	sendReply(msg, 'Sorry, there is no help for that command.')
+	sendReply(msg, sendLang('$H404*', lang))
 
 end
 

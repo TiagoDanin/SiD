@@ -1,11 +1,13 @@
 local command = 'preview <link>'
 local doc = [[```
 /preview <link>
-Returns a full-message, "unlinked" preview.
+$doc_preview*
 ```]]
 
 local triggers = {
-	'^/preview'
+	'^/preview[@'..bot.username..']*',
+	'^/url[@'..bot.username..']*',
+	'^/hideurl[@'..bot.username..']*'
 }
 
 local action = function(msg)
@@ -13,7 +15,7 @@ local action = function(msg)
 	local input = msg.text:input()
 
 	if not input then
-		sendMessage(msg.chat.id, doc, true, nil, true)
+		sendMessage(msg.chat.id, sendLang(doc, lang), true, nil, true)
 		return
 	end
 
@@ -24,7 +26,7 @@ local action = function(msg)
 
 	local res = HTTP.request(input)
 	if not res then
-		sendReply(msg, 'Please provide a valid link.')
+		sendReply(msg, sendLang('$linK_valid*', lang))
 		return
 	end
 

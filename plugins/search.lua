@@ -1,8 +1,8 @@
-local command = 'google <query>'
+local command = 'google <$query*>'
 local doc = [[```
-/google <query>
-Returns four (if group) or eight (if private message) results from Google. Safe search is enabled by default, use "/gnsfw" to disable it.
-Alias: /g
+/google <$query*>
+$doc_google*
+$alias*: /g
 ```]]
 
 local triggers = {
@@ -19,7 +19,7 @@ local action = function(msg)
 		if msg.reply_to_message and msg.reply_to_message.text then
 			input = msg.reply_to_message.text
 		else
-			sendMessage(msg.chat.id, doc, true, msg.message_id, true)
+			sendMessage(msg.chat.id, sendLang(doc, lang), true, msg.message_id, true)
 			return
 		end
 	end
@@ -54,14 +54,12 @@ local action = function(msg)
 		return
 	end
 
-	local output = '*Google results for* _' .. input .. '_ *:*\n'
+	local output = '*Google $results** _' .. input .. '_ *:*\n'
 	for i,v in ipairs(jdat.responseData.results) do
-		local title = jdat.responseData.results[i].titleNoFormatting:gsub('%[.+%]', ''):gsub('&amp;', '&')
---[[
-		if title:len() > 48 then
-			title = title:sub(1, 45) .. '...'
+		local title = HTML.decode(jdat.responseData.results[i].titleNoFormatting:gsub('%[.+%]', ''):gsub('&amp;', '&'))
+		if title:len() > 45 then
+			title = title:sub(1, 42) .. '...'
 		end
-]]--
 		local url = jdat.responseData.results[i].unescapedUrl
 		if url:find('%)') then
 			output = output .. '• ' .. title .. '\n' .. url:gsub('_', '\\_') .. '\n'
@@ -70,7 +68,7 @@ local action = function(msg)
 		end
 	end
 
-	sendMessage(msg.chat.id, output, true, nil, true)
+	sendMessage(msg.chat.id, sendLang(output, lang), true, nil, true)
 
 end
 

@@ -2,47 +2,67 @@ HTTP = require('socket.http')
 HTTPS = require('ssl.https')
 URL = require('socket.url')
 JSON = require('cjson')
+HTML = require('htmlEntities')
+-- Redis
+redis_server = require('redis')
+redis = redis_server.connect('127.0.0.1', 6379)
+-- Sender (API for CLI-TG)
+sender = require('lua-tg/sender')
+tg = sender(localhost, 4567)
 
-version = '3.4'
 
 bot_init = function() -- The function run when the bot is started or reloaded.
-
 	config = dofile('config.lua') -- Load configuration file.
+ 	key = dofile("key.lua") -- Load API KEY
 	dofile('bindings.lua') -- Load Telegram bindings.
 	dofile('utilities.lua') -- Load miscellaneous and cross-plugin functions.
-
-	-- Load the "database"! ;)
-	if not database then
-		database = load_data('otouto.db')
+	if key.bot_api_key == '' then
+		print("Need API-Key in 'key.lua'")
+		return
 	end
+
+	os.execute('clear')
+	print('\n')
+	print('▒█▀▀▀█ ▀█▀ ▒█▀▀▄    '..config.version)
+	print('░▀▀▀▄▄ ▒█░ ▒█░▒█    Base Otouto')
+	print('▒█▄▄▄█ ▄█▄ ▒█▄▄▀    ByTiagoDanin')
+	print('                    '..config.admin_name..' - '..config.admin)
 
 	-- Fetch bot information. Try until it succeeds.
 	repeat bot = getMe() until bot
 	bot = bot.result
 
+	print('Init Plugins')
 	plugins = {} -- Load plugins.
+	local n = 0
 	for i,v in ipairs(config.plugins) do
-		local p = dofile('plugins/'..v)
+		local p = dofile("plugins/"..v)
+		n = n + 1 .. '  '
+		local print_sh = n:sub(1, 2) ..'. '.. v:gsub('.lua', ' ...................'):sub(1, 15)
+		print(print_sh)
 		table.insert(plugins, p)
 	end
 
-	print('@' .. bot.username .. ', AKA ' .. bot.first_name ..' ('..bot.id..')')
+	print(' ')
+	print('Info do bot:')
+	print('@'..bot.username..', Name: '..bot.first_name..' ID: '.. bot.id)
+	print(' ')
 
 	-- Generate a random seed and "pop" the first random number. :)
 	math.randomseed(os.time())
 	math.random()
 
 	last_update = last_update or 0 -- Set loop variables: Update offset,
-	last_cron = last_cron or os.date('%M', os.time()) -- the time of the last cron job,
-	is_started = true -- and whether or not the bot should be running.
-	database.usernames = database.usernames or {} -- Table to cache usernames by user ID.
+	last_cron = last_cron or os.time() -- the time of the last cron job,
+	is_started = true -- whether the bot should be running or not.
+	usernames = usernames or {} -- Table to cache usernames by user ID.
 
 end
 
 on_msg_receive = function(msg) -- The fn run whenever a message is received.
 
 	if msg.from.username then
-		database.usernames[msg.from.username:lower()] = msg.from.id
+		usernames[msg.from.username:lower()] = msg.from.id
 	end
 
 	if msg.date < os.time() - 5 then return end -- Do not process old messages.
@@ -52,9 +72,21 @@ on_msg_receive = function(msg) -- The fn run whenever a message is received.
 		msg.text = '/' .. msg.text:input()
 	end
 
+	-- LOG Chat
+	local from_name = msg.from.first_name or 'NIL.'
+	if msg.from.last_name then
+		from_name = from_name .. ' ' .. msg.from.last_name or 'NIL.'
+	end
+	local msg_texto = msg.text:lower() or 'NIL.'
+	local title_chat = msg.chat.title or 'NIL.'
+	if msg.from.id == msg.chat.id then
+		title_chat = 'Private chat'
+	end
+
 	for i,v in ipairs(plugins) do
 		for k,w in pairs(v.triggers) do
 			if string.match(msg.text:lower(), w) then
+
 				-- a few shortcuts
 				msg.chat.id_str = tostring(msg.chat.id)
 				msg.from.id_str = tostring(msg.from.id)
@@ -64,11 +96,22 @@ on_msg_receive = function(msg) -- The fn run whenever a message is received.
 					msg.from.name = msg.from.first_name .. ' ' .. msg.from.last_name
 				end
 
+				--lang
+				local chat_id = msg.chat.id_str
+				if msg.from.id == msg.chat.id then
+					chat_id = msg.from.id_str
+				end
+				if not redis:get('LANG:'..chat_id) then
+					print('NEW USER LANG')
+					redis:set('LANG:'..chat_id, config.lang)
+				end
+				lang = tostring(redis:get('LANG:'..chat_id))
+
 				local success, result = pcall(function()
 					return v.action(msg)
 				end)
 				if not success then
-					sendReply(msg, 'Sorry, an unexpected error occurred.')
+					sendReply(msg, '🚫 ERRO')
 					handle_exception(result, msg.text)
 					return
 				end
@@ -85,6 +128,24 @@ on_msg_receive = function(msg) -- The fn run whenever a message is received.
 
 end
 
+inline_msg_receive = function(inline) -- run whenever a inline query is received.
+	msg = {
+		id = inline.id,
+		chat = {
+			['id'] = inline.from.id,
+			['title'] = 'inline',
+			['type'] = 'inline',
+			['title'] = inline.from.fisrt_name
+			},
+		from = inline.from,
+		message_id = math.random(100, 800),
+		text = '/!/inline '..inline.query,
+		date = os.time() + 20
+	}
+	-- Convent to message
+	on_msg_receive(msg)
+end
+
 bot_init() -- Actually start the script. Run the bot_init function.
 
 while is_started do -- Start a loop while the bot should be running.
@@ -93,15 +154,17 @@ while is_started do -- Start a loop while the bot should be running.
 	if res then
 		for i,v in ipairs(res.result) do -- Go through every new message.
 			last_update = v.update_id
-			on_msg_receive(v.message)
+			if v.message then
+				on_msg_receive(v.message)
+			elseif v.inline_query then
+				inline_msg_receive (v.inline_query)
+			end
 		end
 	else
-		print(config.errors.connection)
+		print("!!!ERRO!!!: BOT")
 	end
 
-	if last_cron ~= os.date('%M', os.time()) then -- Run cron jobs every minute.
-		last_cron = os.date('%M', os.time())
-		save_data('otouto.db', database) -- Save the database.
+	if last_cron < os.time() - 5 then -- Run cron jobs if the time has come.
 		for i,v in ipairs(plugins) do
 			if v.cron then -- Call each plugin's cron function, if it has one.
 				local res, err = pcall(function() v.cron() end)
@@ -110,10 +173,9 @@ while is_started do -- Start a loop while the bot should be running.
 				end
 			end
 		end
+		last_cron = os.time() -- And finally, update the variable.
 	end
 
 end
 
- -- Save the database before exiting.
-save_data('otouto.db', database)
 print('Halted.')

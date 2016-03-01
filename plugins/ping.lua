@@ -1,12 +1,36 @@
  -- Actually the simplest plugin ever!
 
 local triggers = {
-	'^/ping[@'..bot.username..']*',
-	'^/annyong[@'..bot.username..']*'
+	'^/ping[@'..bot.username..']*'
 }
 
 local action = function(msg)
-	sendMessage(msg.chat.id, msg.text_lower:match('^/ping') and 'Pong!' or 'Annyong.')
+	local input = msg.text:input()
+	if input == 'redis' then
+		if not config.moderation.admins[msg.from.id_str] then
+		    return
+	    end
+		if redis:ping() then
+			sendMessage(msg.chat.id, "REDIS:OK")
+		else
+			sendMessage(msg.chat.id, "REDIS:OFF")
+		end
+	elseif input == 'tg' then
+		if not config.moderation.admins[msg.from.id_str] then
+		    return
+	    end
+		tg:msg(msg.chat.id, 'Pong! 🎾')
+	elseif input == 'server' then
+		if not config.moderation.admins[msg.from.id_str] then
+		    return
+	    end
+		sendMessage(msg.chat.id, 'MSG-Date:    '.. os.date('%F-:-%T', msg.date) .. '\nServer-Date: ' .. io.popen('date +%F-:-%T'):read('*all'))
+	elseif input == 'pong' then
+		sendMessage(msg.chat.id, '🎾P🎾I🎾N🎾G🎾')
+	else
+		sendMessage(msg.chat.id, 'Pong! 🎾')
+	end
+	
 end
 
 return {

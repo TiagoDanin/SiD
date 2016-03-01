@@ -1,31 +1,33 @@
--- bindings.lua
--- Bindings for the Telegram bot API.
--- https://core.telegram.org/bots/api
+local BASE_URL = 'https://api.telegram.org/bot' .. key.bot_api_key
 
-assert(HTTPS)
-assert(JSON)
-
-local BASE_URL = 'https://api.telegram.org/bot' .. config.bot_api_key
-
-if not config.bot_api_key then
-	error('You did not set your bot token in config.lua!')
+if not key.bot_api_key then
+	error('You did not set your bot token in api.lua!')
 end
 
 sendRequest = function(url)
 
 	local dat, res = HTTPS.request(url)
+	local tab = JSON.decode(dat)
 
 	if res ~= 200 then
 		return false, res
 	end
 
-	local tab = JSON.decode(dat)
+	if tab.error_code == 429 then
+		return sendClean()
+	end
 
 	if not tab.ok then
 		return false, tab.description
 	end
 
 	return tab
+end
+
+sendClean = function()
+
+	local url = BASE_URL .. '/getUpdates?timeout=0&offset=1'
+	print('Clean Lag')
 
 end
 
@@ -48,7 +50,19 @@ getUpdates = function(offset)
 
 end
 
-sendMessage = function(chat_id, text, disable_web_page_preview, reply_to_message_id, use_markdown, disable_notification)
+sendInline = function(inline_id, result, disable_web_page_preview)
+
+	local url = BASE_URL .. '/answerInlineQuery?inline_query_id=' .. inline_id .. '&results=' .. result
+
+	if disable_web_page_preview == true then
+		url = url .. '&disable_web_page_preview=true'
+	end
+
+	return sendRequest(url)
+
+end
+
+sendMessage = function(chat_id, text, disable_web_page_preview, reply_to_message_id, use_markdown)
 
 	local url = BASE_URL .. '/sendMessage?chat_id=' .. chat_id .. '&text=' .. URL.escape(text)
 
@@ -64,10 +78,6 @@ sendMessage = function(chat_id, text, disable_web_page_preview, reply_to_message
 		url = url .. '&parse_mode=Markdown'
 	end
 
-	if disable_notification then
-		url = url .. '&disable_notification=true'
-	end
-
 	return sendRequest(url)
 
 end
@@ -78,6 +88,7 @@ sendReply = function(msg, text)
 
 end
 
+
 sendChatAction = function(chat_id, action)
  -- Support actions are typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, find_location
 
@@ -86,7 +97,7 @@ sendChatAction = function(chat_id, action)
 
 end
 
-sendLocation = function(chat_id, latitude, longitude, reply_to_message_id, disable_notification)
+sendLocation = function(chat_id, latitude, longitude, reply_to_message_id)
 
 	local url = BASE_URL .. '/sendLocation?chat_id=' .. chat_id .. '&latitude=' .. latitude .. '&longitude=' .. longitude
 
@@ -94,38 +105,36 @@ sendLocation = function(chat_id, latitude, longitude, reply_to_message_id, disab
 		url = url .. '&reply_to_message_id=' .. reply_to_message_id
 	end
 
-	if disable_notification then
-		url = url .. '&disable_notification=true'
-	end
-
 	return sendRequest(url)
 
 end
 
-forwardMessage = function(chat_id, from_chat_id, message_id, disable_notification)
+forwardMessage = function(chat_id, from_chat_id, message_id)
 
 	local url = BASE_URL .. '/forwardMessage?chat_id=' .. chat_id .. '&from_chat_id=' .. from_chat_id .. '&message_id=' .. message_id
-
-	if disable_notification then
-		url = url .. '&disable_notification=true'
-	end
 
 	return sendRequest(url)
 
 end
 
 curlRequest = function(curl_command)
- -- Use at your own risk. Will not check for success.
 
-	io.popen(curl_command)
+	local dat = io.popen(curl_command):read('*all')
+	local tab = JSON.decode(dat)
+
+	if not tab.ok then
+		return false, tab.description
+	end
+
+	return tab
 
 end
 
-sendPhoto = function(chat_id, photo, caption, reply_to_message_id, disable_notification)
+sendPhoto = function(chat_id, photo, caption, reply_to_message_id)
 
 	local url = BASE_URL .. '/sendPhoto'
 
-	local curl_command = 'curl -s "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
+	local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
 
 	if reply_to_message_id then
 		curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
@@ -135,55 +144,43 @@ sendPhoto = function(chat_id, photo, caption, reply_to_message_id, disable_notif
 		curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
 	end
 
-	if disable_notification then
-		curl_command = curl_command .. ' -F "disable_notification=true"'
-	end
-
 	return curlRequest(curl_command)
 
 end
 
-sendDocument = function(chat_id, document, reply_to_message_id, disable_notification)
+sendDocument = function(chat_id, document, reply_to_message_id)
 
 	local url = BASE_URL .. '/sendDocument'
 
-	local curl_command = 'curl -s "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
+	local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
 
 	if reply_to_message_id then
 		curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-	end
-
-	if disable_notification then
-		curl_command = curl_command .. ' -F "disable_notification=true"'
 	end
 
 	return curlRequest(curl_command)
 
 end
 
-sendSticker = function(chat_id, sticker, reply_to_message_id, disable_notification)
+sendSticker = function(chat_id, sticker, reply_to_message_id)
 
 	local url = BASE_URL .. '/sendSticker'
 
-	local curl_command = 'curl -s "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
+	local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
 
 	if reply_to_message_id then
 		curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-	end
-
-	if disable_notification then
-		curl_command = curl_command .. ' -F "disable_notification=true"'
 	end
 
 	return curlRequest(curl_command)
 
 end
 
-sendAudio = function(chat_id, audio, reply_to_message_id, duration, performer, title, disable_notification)
+sendAudio = function(chat_id, audio, reply_to_message_id, duration, performer, title)
 
 	local url = BASE_URL .. '/sendAudio'
 
-	local curl_command = 'curl -s "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
+	local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
 
 	if reply_to_message_id then
 		curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
@@ -201,19 +198,15 @@ sendAudio = function(chat_id, audio, reply_to_message_id, duration, performer, t
 		curl_command = curl_command .. ' -F "title=' .. title .. '"'
 	end
 
-	if disable_notification then
-		curl_command = curl_command .. ' -F "disable_notification=true"'
-	end
-
 	return curlRequest(curl_command)
 
 end
 
-sendVideo = function(chat_id, video, reply_to_message_id, duration, caption, disable_notification)
+sendVideo = function(chat_id, video, reply_to_message_id, duration, performer, title)
 
 	local url = BASE_URL .. '/sendVideo'
 
-	local curl_command = 'curl -s "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
+	local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
 
 	if reply_to_message_id then
 		curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
@@ -227,19 +220,15 @@ sendVideo = function(chat_id, video, reply_to_message_id, duration, caption, dis
 		curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
 	end
 
-	if disable_notification then
-		curl_command = curl_command .. ' -F "disable_notification=true"'
-	end
-
 	return curlRequest(curl_command)
 
 end
 
-sendVoice = function(chat_id, voice, reply_to_message_id, duration, disable_notification)
+sendVoice = function(chat_id, voice, reply_to_message_id)
 
 	local url = BASE_URL .. '/sendVoice'
 
-	local curl_command = 'curl -s "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
+	local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
 
 	if reply_to_message_id then
 		curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
@@ -247,10 +236,6 @@ sendVoice = function(chat_id, voice, reply_to_message_id, duration, disable_noti
 
 	if duration then
 		curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
-	end
-
-	if disable_notification then
-		curl_command = curl_command .. ' -F "disable_notification=true"'
 	end
 
 	return curlRequest(curl_command)

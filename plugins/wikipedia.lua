@@ -1,8 +1,8 @@
-local command = 'wikipedia <query>'
+local command = 'wikipedia <$query*>'
 local doc = [[```
-/wikipedia <query>
-Returns an article from Wikipedia.
-Aliases: /w, /wiki
+/wikipedia <$query*>
+$doc_wiki*
+$alias*: /w, /wiki
 ```]]
 
 local triggers = {
@@ -19,7 +19,7 @@ local action = function(msg)
 		if msg.reply_to_message and msg.reply_to_message.text then
 			input = msg.reply_to_message.text
 		else
-			sendMessage(msg.chat.id, doc, true, msg.message_id, true)
+			sendMessage(msg.chat.id, sendLang(doc, lang), true, msg.message_id, true)
 			return
 		end
 	end
@@ -42,12 +42,11 @@ local action = function(msg)
 		sendReply(msg, config.errors.results)
 		return
 	end
-
-	local url = jdat.responseData.results[1].unescapedUrl
+--
+	local url = jdat.responseData.results[1].url
 	local title = jdat.responseData.results[1].titleNoFormatting:gsub(' %- Wikipedia, the free encyclopedia', '')
 
-	-- 'https://en.wikipedia.org/wiki/':len() == 30
-	jstr, res = HTTPS.request(wurl .. url:sub(31))
+	jstr, res = HTTPS.request(wurl .. URL.escape(title))
 	if res ~= 200 then
 		sendReply(msg, config.error.connection)
 		return
@@ -66,17 +65,25 @@ local action = function(msg)
 	text = text:gsub('</?.->', '')
 	local l = text:find('\n')
 	if l then
-		text = text:sub(1, l-1)
+		text = text:sub(1, l-2)
 	end
 
 	title = title:gsub('%(.+%)', '')
-	local esctitle = title:gsub("[%^$()%%.%[%]*+%-?]","%%%1")
-	local output = text:gsub('%[.+%]',''):gsub(esctitle, '*%1*') .. '\n'
+	--local output = '[' .. title .. '](' .. url .. ')\n' .. text:gsub('%[.+]%','')
+	--local output = '*' .. title .. '*\n' .. text:gsub('%[.+]%','') .. '\n[Read more.](' .. url .. ')'
+	local output = text:gsub('%[.+%]',''):gsub(title, '*'..title..'*') .. '\n'
 	if url:find('%(') then
 		output = output .. url:gsub('_', '\\_')
 	else
 		output = output .. '[Read more.](' .. url .. ')'
 	end
+
+--
+--[[ Comment the previous block and uncomment this one for full-message,
+ -- "unlinked" link previews.
+	-- Invisible zero-width, non-joiner.
+	local output = '[​](' .. jdat.responseData.results[1].url .. ')'
+]]--
 
 	sendMessage(msg.chat.id, output, true, nil, true)
 

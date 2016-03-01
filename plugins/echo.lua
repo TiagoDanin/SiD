@@ -1,21 +1,21 @@
-local command = 'echo <text>'
+local command = 'echo <$text*>'
 local doc = [[```
-/echo <text>
-Repeats a string of text.
+/echo <$text*>
+$doc_echo*
 ```]]
 
 local triggers = {
-	'^/echo[@'..bot.username..']*'
+	'^/echo[@'..bot.username..']*',
+	--'^/e[@'..bot.username..']*'
 }
 
 local action = function(msg)
 
 	local input = msg.text:input()
-
 	if input then
-		sendMessage(msg.chat.id, latcyr(input))
+		sendMessage(msg.chat.id, latcyr(input:gsub('^!+','¡'):gsub([[^/+]], [[\]])))
 	else
-		sendMessage(msg.chat.id, doc, true, msg.message_id, true)
+		sendMessage(msg.chat.id, sendLang(doc, lang), true, msg.message_id, true)
 	end
 
 end

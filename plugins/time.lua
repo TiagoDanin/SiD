@@ -1,11 +1,13 @@
-local command = 'time <location>'
+local command = 'time <$location*>'
 local doc = [[```
-/time <location>
-Returns the time, date, and timezone for the given location.
+/time <$location*>
+$doc_time*.
 ```]]
 
 local triggers = {
-	'^/time[@'..bot.username..']*'
+	'^/time[@'..bot.username..']*',
+	'^/data[@'..bot.username..']*',
+	'^/hora[@'..bot.username..']*'
 }
 
 local action = function(msg)
@@ -15,7 +17,7 @@ local action = function(msg)
 		if msg.reply_to_message and msg.reply_to_message.text then
 			input = msg.reply_to_message.text
 		else
-			sendMessage(msg.chat.id, doc, true, msg.message_id, true)
+			sendMessage(msg.chat.id, sendLang(doc, lang), true, msg.message_id, true)
 			return
 		end
 	end

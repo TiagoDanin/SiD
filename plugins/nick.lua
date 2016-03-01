@@ -1,11 +1,7 @@
-if not database.nicknames then
-	database.nicknames = {}
-end
-
-local command = 'nick <nickname>'
+local command = 'nick <$nickname*>'
 local doc = [[```
-/nick <nickname>
-Set your nickname. Use "/whoami" to check your nickname and "/nick -" to delete it.
+/nick <$nickname*>
+$doc_nick*
 ```]]
 
 local triggers = {
@@ -16,23 +12,26 @@ local action = function(msg)
 
 	local input = msg.text:input()
 	if not input then
-		sendMessage(msg.chat.id, doc, true, msg.message_id, true)
+		sendMessage(msg.chat.id, sendLang(doc, lang), true, msg.message_id, true)
 		return true
 	end
 
 	if string.len(input) > 32 then
-		sendReply(msg, 'The character limit for nicknames is 32.')
+		sendReply(msg, sendLang('$limit_32*', lang))
 		return true
 	end
 
+	nicks = load_data('nicknames.json')
+
 	if input == '-' then
-		database.nicknames[msg.from.id_str] = nil
-		sendReply(msg, 'Your nickname has been deleted.')
+		nicks[msg.from.id_str] = nil
+		sendReply(msg, sendLang('$deleted*', lang))
 	else
-		database.nicknames[msg.from.id_str] = input
-		sendReply(msg, 'Your nickname has been set to "' .. input .. '".')
+		nicks[msg.from.id_str] = input
+		sendReply(msg, sendLang('$add_nick* ' .. input .. '.', lang))
 	end
 
+	save_data('nicknames.json', nicks)
 	return true
 
 end

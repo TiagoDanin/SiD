@@ -1,16 +1,7 @@
 -- utilities.lua
 -- Functions shared among plugins.
 
- -- you're welcome, brayden :^)
-HTTP = HTTP or require('socket.http')
-HTTPS = HTTPS or require('ssl.https')
-JSON = JSON or require('cjson')
-
- -- get the indexed word in a string
-get_word = function(s, i)
-
-	s = s or ''
-	i = i or 1
+function get_word(s, i) -- get the indexed word in a string
 
 	local t = {}
 	for w in s:gmatch('%g+') do
@@ -21,8 +12,24 @@ get_word = function(s, i)
 
 end
 
- -- Returns the string after the first space.
-function string:input()
+function markdown_url(title, url) -- Filter Markdown
+	local markdown = '['.. HTML.decode(title:gsub('%[.+%]', ''):gsub('%(.+%)', ''):gsub('&.-;', '')) ..']('.. url .. ')'
+	return markdown
+end
+
+function inline_block(title, text) -- Inline Block
+	local ran = math.random(1 ,100)
+	local inline = '{"type":"article", "id":"'.. ran ..'", "title":"'.. title ..'", "message_text": "'.. text ..'", "parse_mode":"Markdown"}'
+	return inline
+end
+
+function sendLang(text, lang)
+	lg = dofile("lang/lang.lua")
+	local l = string.gsub(text, "$.-*", lg[tostring(lang)])
+	return l
+end
+
+function string:input() -- Returns the string after the first space.
 	if not self:find(' ') then
 		return false
 	end
@@ -64,18 +71,16 @@ local lc_list = {
 	['!'] = 'ǃ'
 }
 
- -- Replaces letters with corresponding Cyrillic characters.
-latcyr = function(str)
+function latcyr(str) -- Replaces letters with corresponding Cyrillic characters.
 	for k,v in pairs(lc_list) do
 		str = string.gsub(str, k, v)
 	end
 	return str
 end
 
- -- Loads a JSON file as a table.
 load_data = function(filename)
 
-	local f = io.open(filename)
+	local f = io.open('data/'..filename)
 	if not f then
 		return {}
 	end
@@ -88,10 +93,13 @@ load_data = function(filename)
 end
 
  -- Saves a table to a JSON file.
-save_data = function(filename, data)
+save_data = function(filename, data, mode)
 
 	local s = JSON.encode(data)
-	local f = io.open(filename, 'w')
+	if not mode then
+		mode = 'w'
+	end
+	local f = io.open('data/'..filename, mode)
 	f:write(s)
 	f:close()
 
@@ -139,7 +147,7 @@ resolve_username = function(target)
 	local input = tostring(target):lower()
 	if input:match('^@') then
 		local uname = input:gsub('^@', '')
-		return database.usernames[uname]
+		return usernames[uname]
 	else
 		return tonumber(target) or false
 	end
@@ -150,13 +158,14 @@ handle_exception = function(err, message)
 
 	if not err then err = '' end
 
-	local output = '\n[' .. os.date('%F %T', os.time()) .. ']\n' .. bot.username .. ': ' .. err .. '\n' .. message .. '\n'
+	local output = err .. '\n' .. message .. '\n'
 
-	if config.log_chat then
+	if config.debug and config.debug.chat then
+		sendMessage(config.debug.chat, '*[' .. os.date('%F %T', os.time()) .. ']* ' .. bot.username .. ':', true, nil, true)
 		output = '```' .. output .. '```'
-		sendMessage(config.log_chat, output, true, nil, true)
+		sendMessage(config.debug.chat, output, true, nil, true)
 	else
-		print(output)
+		print('!!!ERRO!!! ' .. os.date('%F %T', os.time()) .. ' LOG CHAT\n'..output..'\n\n')
 	end
 
 end
@@ -187,12 +196,13 @@ download_file = function(url, filename)
 
 	if code ~= 200 then return false end
 
-	filename = filename or '/tmp/' .. os.time()
+	filename = filename or os.time()
 
-	local file = io.open(filename, 'w+')
+	local file_path = 'data/'..filename
+
+	file = io.open(file_path, 'w+')
 	file:write(table.concat(respbody))
 	file:close()
 
-	return filename
-
+	return file_path
 end
