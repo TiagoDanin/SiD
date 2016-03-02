@@ -1,5 +1,6 @@
 ## SiDV4
 **Repo SiDBot.**
+**SiDBot V4 Based on otouto v3.2 by topkecleon**
 [BR] Caso seja Brasileiro, pesquise no Google o que é GNU V2, antes de ir apagando os Direitos Autorais, de quem gastou o seu tempo para que esse projeto fosse para frente. :)
 
 ## Multi language
