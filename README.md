@@ -8,13 +8,13 @@ Portugues SOON - [Brasil](SOON)</br>
 English SOON - [USA](SOON)</br>
 
 ##Requires and Libs
-Requires Git, Unzip, Redis-Server, Autoconf, Make, Libreadline-dev, Libconfig-dev, Libssl-dev, Lua5.2, Lua-socket, Lua-sec, Lua-cjson and [HtmlEntities-for-lua](https://github.com/TiagoDanin/htmlEntities-for-lua).</br>
-Install TG (Telegram-Cli) and [Lua-TG](http://github.com/topkecleon/lua-tg)
-[dkjson](http://github.com/LuaDist/dkjson/) is provided.</br>
+Requires Git, Unzip, Redis-Server, Autoconf, Make, Libreadline-dev, Libconfig-dev, Libssl-dev, Lua5.2, Lua-socket, Lua-sec, Lua-cjson, [HtmlEntities-for-lua](https://github.com/TiagoDanin/htmlEntities-for-lua) and [Redis-lua](https://github.com/nrk/redis-lua).</br>
+Install TG (Telegram-Cli) and [Lua-TG](http://github.com/topkecleon/lua-tg)</br>
 Written for Lua 5.2 but will probably run on 5.3.
 
 ##Support
-Don't ask me questions noob :p
+Don't ask me questions noob :p</br>
+Don't send me questions by Telegram</br>
 Github [New Issue](https://github.com/TiagoDanin/SiD/issues/new)
 
 ##LICENSE
