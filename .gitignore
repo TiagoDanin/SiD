@@ -1,4 +1,5 @@
-plugins/CUSTOM.lua
+key.lua
 *.json
+data/*
 lua-tg/*
 tg/*
