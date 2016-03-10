@@ -43,7 +43,7 @@ local action = function(msg)
 	
 	if input:match('^[1234567890]*$') then
 		local n_cmd = ''
-		local convert = 0 + input -- Convert to number
+		local convert = math.abs(input)
 		
 		for i,v in ipairs(plugins) do
 			if v.command then
@@ -51,6 +51,9 @@ local action = function(msg)
 			end
 		end
 		input = get_word(n_cmd, convert)
+		if convert > n then
+			input = n
+		end
 	end
 	
 	for i,v in ipairs(plugins) do
