@@ -13,7 +13,7 @@ local action = function(msg)
 
 	local input = msg.text:input()
 	if input then
-		sendMessage(msg.chat.id, latcyr(input:gsub('^!+','¡'):gsub([[^/+]], [[\]])))
+		sendMessage(msg.chat.id, latcyr(input:gsub('^!+','¡'):gsub([[^/+]], [[\]]))) -- Thanks Wesley 
 	else
 		sendMessage(msg.chat.id, sendLang(doc, lang), true, msg.message_id, true)
 	end

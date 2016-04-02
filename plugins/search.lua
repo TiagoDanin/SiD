@@ -1,3 +1,5 @@
+-- Trash Google
+-- Use Bing or DuckDuckGo <3
 local command = 'google <$query*>'
 local doc = [[```
 /google <$query*>

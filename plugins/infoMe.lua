@@ -1,4 +1,5 @@
 -- Thanks to @@imandaneshi the idea
+-- IF '-' sick
 local command = 'me [site] [$username*]'
 local doc = [[```
 /me
@@ -17,14 +18,14 @@ local triggers = {
 local action = function(msg)
     infoMe = load_data('infoMe.json')
 	local input = msg.text:input()
-	
+
 	if not input then
 	    nicks = load_data('nicknames.json')
 	    local name_user = msg.from.first_name
 	    if nicks[msg.from.id_str] then
 	        name_user = nicks[msg.from.id_str]
 	    end
-	    
+
 		local message = name_user or ''
 		if infoMe['FACEBOOK'..msg.from.id_str] then
 		    message = message .. '\n*Facebook:* ' .. markdown_url(get_word(infoMe['FACEBOOK'..msg.from.id_str], 2), get_word(infoMe['FACEBOOK'..msg.from.id_str], 1))
@@ -53,11 +54,11 @@ local action = function(msg)
 		if infoMe['STEAM'..msg.from.id_str] then
 		    message = message .. '\n*Steam:* ' .. markdown_url(get_word(infoMe['STEAM'..msg.from.id_str], 2), get_word(infoMe['STEAM'..msg.from.id_str], 1))
 		end
-		
+
 		if redis:get('RANK:'..msg.from.id_str) then
 			total = redis:get('RANK:'..msg.from.id_str)
 		end
-		
+
 		message = message .. '\n*$total*:* ' .. (total or '1') .. 'MSGs'
 		sendMessage(msg.chat.id, sendLang(message, lang), true, msg.message_id, true)
 		return true
@@ -67,12 +68,12 @@ local action = function(msg)
 		sendReply(msg, 'MAX > 80')
 		return true
 	end
-	
+
     local info = get_word(input, 1):upper()
     local id = get_word(input, 2)
     local user = msg.from.id_str
     local bd = info..msg.from.id_str
-    
+
 	if info == 'FACEBOOK' then
 		infoMe[bd] = 'https://www.facebook.com/'..id .. ' '..id
 		sendMessage(msg.chat.id, '`OK`', true, msg.message_id, true)

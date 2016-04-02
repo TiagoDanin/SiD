@@ -15,11 +15,6 @@ local action = function(msg)
 		else
 			sendMessage(msg.chat.id, "REDIS:OFF")
 		end
-	elseif input == 'tg' then
-		if not config.moderation.admins[msg.from.id_str] then
-		    return
-	    end
-		tg:msg(msg.chat.id, 'Pong! 🎾')
 	elseif input == 'server' then
 		if not config.moderation.admins[msg.from.id_str] then
 		    return
@@ -30,7 +25,7 @@ local action = function(msg)
 	else
 		sendMessage(msg.chat.id, 'Pong! 🎾')
 	end
-	
+
 end
 
 return {

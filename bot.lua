@@ -4,12 +4,8 @@ URL = require('socket.url')
 JSON = require('cjson')
 HTML = require('htmlEntities')
 -- Redis
-redis_server = require('redis')
+redis_server = require('redis') --https://github.com/nrk/redis-lua
 redis = redis_server.connect('127.0.0.1', 6379)
--- Sender (API for CLI-TG)
-sender = require('lua-tg/sender')
-tg = sender(localhost, 4567)
-
 
 bot_init = function() -- The function run when the bot is started or reloaded.
 	config = dofile('config.lua') -- Load configuration file.
@@ -24,8 +20,8 @@ bot_init = function() -- The function run when the bot is started or reloaded.
 	os.execute('clear')
 	print('\n')
 	print('▒█▀▀▀█ ▀█▀ ▒█▀▀▄    '..config.version)
-	print('░▀▀▀▄▄ ▒█░ ▒█░▒█    Base Otouto')
-	print('▒█▄▄▄█ ▄█▄ ▒█▄▄▀    ByTiagoDanin')
+	print('░▀▀▀▄▄ ▒█░ ▒█░▒█    Base Otoutov3.2 by topkecleon')
+	print('▒█▄▄▄█ ▄█▄ ▒█▄▄▀    SiDBot V4 ByTiagoDanin')
 	print('                    '..config.admin_name..' - '..config.admin)
 
 	-- Fetch bot information. Try until it succeeds.

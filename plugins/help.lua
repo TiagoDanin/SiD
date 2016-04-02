@@ -1,6 +1,3 @@
- -- This plugin should go at the end of your plugin list in
- -- config.lua, but not after greetings.lua.
-
 local help_text = '📌*$HAC*:*'
 
 local n = 0
@@ -40,11 +37,11 @@ local action = function(msg)
 		end
 		return
 	end
-	
+
 	if input:match('^[1234567890]*$') then
 		local n_cmd = ''
 		local convert = math.abs(input)
-		
+
 		for i,v in ipairs(plugins) do
 			if v.command then
 				n_cmd = n_cmd .. get_word(v.command, 1) .. ' '
@@ -55,7 +52,7 @@ local action = function(msg)
 			input = n
 		end
 	end
-	
+
 	for i,v in ipairs(plugins) do
 		if v.command and get_word(v.command, 1) == input and v.doc then
 			local output = '*$H_for** _' .. get_word(v.command, 1) .. '_ *:*\n' .. v.doc

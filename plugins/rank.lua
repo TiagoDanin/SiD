@@ -1,9 +1,9 @@
 local triggers = {
-	''
+	'' -- All '-'
 }
 
 local action = function(msg)
-    
+
     if not redis:get('RANK:'..msg.from.id_str) then
         redis:set('RANK:'..msg.from.id_str, 1)
         print('RANK:'..msg.from.id_str)

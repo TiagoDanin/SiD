@@ -11,7 +11,7 @@ local action = function(msg)
 	-- other plugins.
 	if msg.forward_from then return end
 
-	local message = '$info_text* ' .. config.version .. '\n👤 By @TiagoDanin \n💭 $news* @BotSID'
+	local message = '$info_text* ' .. config.version .. '\n👤 By @TiagoDanin \n💭 $news* @SiDBot :)'
 	message = message .. '\n\n Lang: \n🇧🇷-PT (`/lang pt`) \n🇱🇷-EN (`/lang en`) '
 	if msg.new_chat_participant and msg.new_chat_participant.id == bot.id then
 		sendMessage(msg.chat.id, sendLang(message, lang), true, nil, true)

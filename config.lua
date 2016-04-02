@@ -6,7 +6,7 @@ return {
 
 	max_command = 4,
 
-	version = 'V4.2.0G', --B = Beta, S = Slable, L = Lang, F = FIX -- G = GitHub
+	version = 'V4.2.1G', --B = Beta, S = Slable, L = Lang, F = FIX -- G = GitHub
 	debug = true,  -- False disable
 	debug = {
 		chat = -1001022293201
@@ -38,7 +38,6 @@ return {
 
 	plugins = {
 		'control.lua',
-		'admin.lua',
 		'blacklist.lua',
 		'info.lua',
 		'lang.lua',
