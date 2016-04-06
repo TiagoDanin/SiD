@@ -17,8 +17,8 @@
 
 
 ##Requires and Libs
-Requires Git, Unzip, Redis-Server, Autoconf, Make, Libreadline-dev, Libconfig-dev, Libssl-dev, Lua5.2, Lua-socket, Lua-sec, Lua-cjson, [HtmlEntities-for-lua](https://github.com/TiagoDanin/htmlEntities-for-lua) and [Redis-lua](https://github.com/nrk/redis-lua).</br>
-Written for Lua 5.2.
+Requires Git, Unzip, Redis-Server, Lua5.2, Lua-socket, Lua-sec, Lua-cjson, [HtmlEntities-for-lua](https://github.com/TiagoDanin/htmlEntities-for-lua) and [Redis-lua](https://github.com/nrk/redis-lua).</br>
+Written for [Lua 5.2](http://www.lua.org/manual/5.2/)
 
 ##Support
 Don't ask me questions noob :p</br>
