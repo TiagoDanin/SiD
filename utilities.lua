@@ -162,8 +162,7 @@ handle_exception = function(err, message)
 
 	if config.debug and config.debug.chat then
 		sendMessage(config.debug.chat, '*[' .. os.date('%F %T', os.time()) .. ']* ' .. bot.username .. ':', true, nil, true)
-		output = '```' .. output .. '```'
-		sendMessage(config.debug.chat, output, true, nil, true)
+		sendMessage(config.debug.chat, output, false, false, false)
 	else
 		print('!!!ERRO!!! ' .. os.date('%F %T', os.time()) .. ' LOG CHAT\n'..output..'\n\n')
 	end

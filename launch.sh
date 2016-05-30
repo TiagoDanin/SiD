@@ -15,9 +15,9 @@ elif [ "$1" = "license" ]; then
 	echo "　 ▒█▀▀█ ▒█▀▀█ ▒█░░░ ▀█░█▀ █▀█"
 	echo "　 ▒█░▄▄ ▒█▄▄█ ▒█░░░ ░█▄█░ ░▄▀"
 	echo "　 ▒█▄▄█ ▒█░░░ ▒█▄▄█ ░░▀░░ █▄▄"
-	echo "Base OtoutoV3.2 by Topkecleon"
+	echo "Base on Otouto by Topkecleon"
 	echo "SiDbot By TiagoDanin"
-	echo "licensed GPLv2."
+	echo "licensed AGPLv3."
 	echo
 	echo
 	cat LICENSE

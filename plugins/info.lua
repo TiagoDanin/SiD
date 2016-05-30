@@ -11,8 +11,8 @@ local action = function(msg)
 	-- other plugins.
 	if msg.forward_from then return end
 
-	local message = '$info_text* ' .. config.version .. '\n👤 By @TiagoDanin \n💭 $news* @SiDBot :)'
-	message = message .. '\n\n Lang: \n🇧🇷-PT (`/lang pt`) \n🇱🇷-EN (`/lang en`) '
+	local message = '$info_text* ' .. config.version .. '\n👤 By @TiagoDanin :)'
+	message = message .. '\n\n Lang: \n🇱🇷-EN (`/lang en`) '
 	if msg.new_chat_participant and msg.new_chat_participant.id == bot.id then
 		sendMessage(msg.chat.id, sendLang(message, lang), true, nil, true)
 		return
@@ -27,10 +27,10 @@ local action = function(msg)
 		sendMessage(msg.chat.id, sendLang(message, lang), true, nil, true)
 		return
 	elseif string.match(msg.text_lower, '^/more[@'..bot.username..']*') or string.match(msg.text_lower, '^/mais[@'..bot.username..']*') then
-		sendMessage(msg.chat.id, "Based on otouto v3.2 by topkecleon.\notouto v3 is licensed under the GPLv2.\ngithub.com/topkecleon/otouto", true)
+		sendMessage(msg.chat.id, "Based on Otouto v3.2 by topkecleon.\nOtouto is licensed under the AGLPv3.\nhttp://otou.to", true)
 		return
 	elseif string.match(msg.text_lower, '^/license[@'..bot.username..']*') then
-		sendMessage(msg.chat.id, "Based on otouto v3.2 by topkecleon.\notouto v3 is licensed under the GPLv2.\ngithub.com/topkecleon/otouto", true)
+		sendMessage(msg.chat.id, "Based on Otouto v3.2 by topkecleon.\nOtouto is licensed under the AGLPv3.\nghttp://otou.to", true)
 		return
 	end
 

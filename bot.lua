@@ -12,7 +12,7 @@ bot_init = function() -- The function run when the bot is started or reloaded.
  	key = dofile("key.lua") -- Load API KEY
 	dofile('bindings.lua') -- Load Telegram bindings.
 	dofile('utilities.lua') -- Load miscellaneous and cross-plugin functions.
-	if key.bot_api_key == '' then
+	if not key.bot_api_key or key.bot_api_key == '' then
 		print("Need API-Key in 'key.lua'")
 		return
 	end
@@ -107,7 +107,7 @@ on_msg_receive = function(msg) -- The fn run whenever a message is received.
 					return v.action(msg)
 				end)
 				if not success then
-					sendReply(msg, '🚫 ERRO')
+					sendReply(msg, config.errors.erro)
 					handle_exception(result, msg.text)
 					return
 				end
@@ -134,9 +134,9 @@ inline_msg_receive = function(inline) -- run whenever a inline query is received
 			['title'] = inline.from.fisrt_name
 			},
 		from = inline.from,
-		message_id = math.random(100, 800),
+		message_id = math.random(100, 900),
 		text = '/!/inline '..inline.query,
-		date = os.time() + 20
+		date = os.time() + 15
 	}
 	-- Convent to message
 	on_msg_receive(msg)

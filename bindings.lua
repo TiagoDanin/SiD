@@ -84,7 +84,7 @@ end
 
 sendReply = function(msg, text)
 
-	return sendMessage(msg.chat.id, text, true, msg.message_id)
+	return sendMessage(msg.chat.id, text, true, msg.message_id, true)
 
 end
 

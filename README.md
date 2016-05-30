@@ -1,12 +1,12 @@
 ## SiDV4
 
-[SiDbotV5](telegram.me/sidbot) Based [jack-telegram-bot](https://github.com/SEEDTEAM/jack-telegram-bot) 
+[SiDbotV5](telegram.me/sidbot) Based [jack-telegram-bot](https://github.com/SEEDTEAM/jack-telegram-bot) ❤️
 
 Logo design by [Everton.arts](https://www.facebook.com/Evertonarts-693615497441103)
 
 **Repo SiDBotV4.**</br>
 **SiDBot V4 Based on otouto v3.2 by topkecleon**</br>
-[BR] Caso seja Brasileiro, pesquise no Google o que é GNU V2, antes de ir apagando os Direitos Autorais, de quem gastou o seu tempo para que esse projeto fosse para frente. :)</br>
+[BR] Caso seja Brasileiro, pesquise no Google o que é AGPL v3, antes de ir apagando os Direitos Autorais, de quem gastou o seu tempo para que esse projeto fosse para frente. :)</br>
 
 
 **Multi language :)**
@@ -29,7 +29,7 @@ Github [New Issue](https://github.com/TiagoDanin/SiD/issues/new)
 
 ##LICENSE
 Fork [Otouto](https://github.com/topkecleon/otouto)</br>
-GNU GENERAL PUBLIC LICENSE ByTokecleon
+GNU AFFERO GENERAL PUBLIC LICENSE ByTokecleon
 
 # Thanks
 >Tokecleon

@@ -6,10 +6,10 @@ return {
 
 	max_command = 4,
 
-	version = 'V4.2.1G', --B = Beta, S = Slable, L = Lang, F = FIX -- G = GitHub
-	debug = true,  -- False disable
+	version = 'V4.2.2G', --B = Beta, S = Slable, L = Lang, F = FIX -- G = GitHub
+	debug = false,  -- True enable
 	debug = {
-		chat = -1001022293201
+		chat = -123456789
 	},
 
 	admin = 89198119,
@@ -24,6 +24,7 @@ return {
 	},
 
 	errors = {
+		erro = '🚫 ERRO',
 		connection = '🚫 404:Connection',
 		results = 'No results found.',
 		argument = '🚫 Invalid argument.',
