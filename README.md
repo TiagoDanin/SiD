@@ -18,16 +18,16 @@ Logo design by [Everton.arts](https://www.facebook.com/Evertonarts-6936154974411
 **Redis :)**
 
 
-##Requires and Libs
+## Requires and Libs
 Requires Git, Unzip, Redis-Server, Lua5.2, Lua-socket, Lua-sec, Lua-cjson, [HtmlEntities-for-lua](https://github.com/TiagoDanin/htmlEntities-for-lua) and [Redis-lua](https://github.com/nrk/redis-lua).</br>
 Written for [Lua 5.2](http://www.lua.org/manual/5.2/)
 
-##Support
+## Support
 Don't ask me questions noob :p</br>
 Don't send me questions by Telegram</br>
 Github [New Issue](https://github.com/TiagoDanin/SiD/issues/new)
 
-##LICENSE
+## LICENSE
 Fork [Otouto](https://github.com/topkecleon/otouto)</br>
 GNU AFFERO GENERAL PUBLIC LICENSE ByTokecleon
 
