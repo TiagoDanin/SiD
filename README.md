@@ -2,6 +2,8 @@
 
 [SiDbotV5](telegram.me/sidbot) Based [jack-telegram-bot](https://github.com/SEEDTEAM/jack-telegram-bot) ❤️
 
+[RepoV5](https://gitlab.com/TiagoDanin/SiDBot) To access the repo contact me with your username (gitlab)
+
 Logo design by [Everton.arts](https://www.facebook.com/Evertonarts-693615497441103)
 
 **Repo SiDBotV4.**</br>
