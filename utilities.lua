@@ -121,8 +121,10 @@ get_coords = function(input)
 	end
 
 	return {
-		lat = jdat.results[1].geometry.location.lat,
-		lon = jdat.results[1].geometry.location.lng
+	lat  = jdat.results[1].geometry.location.lat,
+    	lon  = jdat.results[1].geometry.location.lng,
+    	acc  = jdat.results[1].geometry.location_type,
+    	types= jdat.results[1].types,
 	}
 
 end
