@@ -38,7 +38,7 @@ local action = function(msg)
 		return
 	end
 
-	if input:match('^[1234567890]*$') then
+	if input:match('^[%d]*%d$') then
 		local n_cmd = ''
 		local convert = math.abs(input)
 

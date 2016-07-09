@@ -8,6 +8,8 @@ if [ "$1" = "install" ]; then
 	echo
 	echo Install Libs
 	sudo apt-get install git make unzip lua-socket lua-sec redis-server
+	wget https://raw.githubusercontent.com/TiagoDanin/htmlEntities-for-lua/master/src/htmlEntities.lua
+	wget https://raw.githubusercontent.com/nrk/redis-lua/version-2.0/src/redis.lua
 	echo
 	echo
 	./launch.sh license

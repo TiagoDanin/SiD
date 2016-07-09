@@ -70,6 +70,6 @@ return {
 		['$fm_not_h*'] = 'No history for this user.',
 		['$fm_last*'] = 'is currently listening to',
 		['$fm_last_*'] = 'last listened to',
-		[''] = ''
+		[''] = '' --Add new lag...
 	},
 }

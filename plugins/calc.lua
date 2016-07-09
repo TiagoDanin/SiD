@@ -18,6 +18,8 @@ local action = function(msg)
 			sendMessage(msg.chat.id, sendLang(doc, lang), true, msg.message_id, true)
 			return
 		end
+	elseif msg.reply_to_message and msg.reply_to_message.text then
+		input = msg.reply_to_message.text .. input
 	end
 
 	local url = 'https://api.mathjs.org/v1/?expr=' .. URL.escape(input)

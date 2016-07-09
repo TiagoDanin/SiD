@@ -6,7 +6,7 @@ return {
 
 	max_command = 4,
 
-	version = 'V4.2.2G', --B = Beta, S = Slable, L = Lang, F = FIX -- G = GitHub
+	version = 'V4.2.4FG', --B = Beta, S = Slable, L = Lang, F = FIX -- G = GitHub
 	debug = false,  -- True enable
 	debug = {
 		chat = -123456789

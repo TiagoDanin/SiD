@@ -4,7 +4,7 @@ URL = require('socket.url')
 JSON = require('cjson')
 HTML = require('htmlEntities')
 -- Redis
-redis_server = require('redis') --https://github.com/nrk/redis-lua
+redis_server = require('redis')
 redis = redis_server.connect('127.0.0.1', 6379)
 
 bot_init = function() -- The function run when the bot is started or reloaded.
@@ -13,7 +13,7 @@ bot_init = function() -- The function run when the bot is started or reloaded.
 	dofile('bindings.lua') -- Load Telegram bindings.
 	dofile('utilities.lua') -- Load miscellaneous and cross-plugin functions.
 	if not key.bot_api_key or key.bot_api_key == '' then
-		print("Need API-Key in 'key.lua'")
+		print("Need API-Key in 'key.lua' sample file: 'sample.key.lua'")
 		return
 	end
 
@@ -87,18 +87,18 @@ on_msg_receive = function(msg) -- The fn run whenever a message is received.
 				msg.chat.id_str = tostring(msg.chat.id)
 				msg.from.id_str = tostring(msg.from.id)
 				msg.text_lower = msg.text:lower()
-				msg.from.name = msg.from.first_name
+				local name = msg.from.name = msg.from.first_name
 				if msg.from.last_name then
-					msg.from.name = msg.from.first_name .. ' ' .. msg.from.last_name
+					name = msg.from.first_name .. ' ' .. msg.from.last_name
 				end
 
-				--lang
 				local chat_id = msg.chat.id_str
 				if msg.from.id == msg.chat.id then
 					chat_id = msg.from.id_str
 				end
+
+				--lang
 				if not redis:get('LANG:'..chat_id) then
-					print('NEW USER LANG')
 					redis:set('LANG:'..chat_id, config.lang)
 				end
 				lang = tostring(redis:get('LANG:'..chat_id))
