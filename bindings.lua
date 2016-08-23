@@ -1,243 +1,242 @@
 local BASE_URL = 'https://api.telegram.org/bot' .. key.bot_api_key
 
 if not key.bot_api_key then
-	error('You did not set your bot token in api.lua!')
+  error('You did not set your bot token in api.lua!')
 end
 
 sendRequest = function(url)
 
-	local dat, res = HTTPS.request(url)
-	local tab = JSON.decode(dat)
+  local dat, res = HTTPS.request(url)
+  local tab = JSON.decode(dat)
 
-	if res ~= 200 then
-		return false, res
-	end
+  if res ~= 200 then
+    return false, res
+  end
 
-	if tab.error_code == 429 then
-		return sendClean()
-	end
+  if tab.error_code == 429 then
+    return sendClean()
+  end
 
-	if not tab.ok then
-		return false, tab.description
-	end
+  if not tab.ok then
+    return false, tab.description
+  end
 
-	return tab
+  return tab
 end
 
 sendClean = function()
 
-	local url = BASE_URL .. '/getUpdates?timeout=0&offset=1'
-	print('Clean Lag')
+  local url = BASE_URL .. '/getUpdates?timeout=0&offset=1'
+  print('Clean Lag')
 
 end
 
 getMe = function()
 
-	local url = BASE_URL .. '/getMe'
-	return sendRequest(url)
+  local url = BASE_URL .. '/getMe'
+  return sendRequest(url)
 
 end
 
 getUpdates = function(offset)
 
-	local url = BASE_URL .. '/getUpdates?timeout=20'
+  local url = BASE_URL .. '/getUpdates?timeout=20'
 
-	if offset then
-		url = url .. '&offset=' .. offset
-	end
+  if offset then
+    url = url .. '&offset=' .. offset
+  end
 
-	return sendRequest(url)
+  return sendRequest(url)
 
 end
 
 sendInline = function(inline_id, result, disable_web_page_preview)
 
-	local url = BASE_URL .. '/answerInlineQuery?inline_query_id=' .. inline_id .. '&results=' .. result
+  local url = BASE_URL .. '/answerInlineQuery?inline_query_id=' .. inline_id .. '&results=' .. result
 
-	if disable_web_page_preview == true then
-		url = url .. '&disable_web_page_preview=true'
-	end
+  if disable_web_page_preview == true then
+    url = url .. '&disable_web_page_preview=true'
+  end
 
-	return sendRequest(url)
+  return sendRequest(url)
 
 end
 
 sendMessage = function(chat_id, text, disable_web_page_preview, reply_to_message_id, use_markdown)
 
-	local url = BASE_URL .. '/sendMessage?chat_id=' .. chat_id .. '&text=' .. URL.escape(text)
+  local url = BASE_URL .. '/sendMessage?chat_id=' .. chat_id .. '&text=' .. URL.escape(text)
 
-	if disable_web_page_preview == true then
-		url = url .. '&disable_web_page_preview=true'
-	end
+  if disable_web_page_preview == true then
+    url = url .. '&disable_web_page_preview=true'
+  end
 
-	if reply_to_message_id then
-		url = url .. '&reply_to_message_id=' .. reply_to_message_id
-	end
+  if reply_to_message_id then
+    url = url .. '&reply_to_message_id=' .. reply_to_message_id
+  end
 
-	if use_markdown then
-		url = url .. '&parse_mode=Markdown'
-	end
+  if use_markdown then
+    url = url .. '&parse_mode=Markdown'
+  end
 
-	return sendRequest(url)
+  return sendRequest(url)
 
 end
 
 sendReply = function(msg, text)
 
-	return sendMessage(msg.chat.id, text, true, msg.message_id, true)
+  return sendMessage(msg.chat.id, text, true, msg.message_id, true)
 
 end
 
-
 sendChatAction = function(chat_id, action)
- -- Support actions are typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, find_location
+  -- Support actions are typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, find_location
 
-	local url = BASE_URL .. '/sendChatAction?chat_id=' .. chat_id .. '&action=' .. action
-	return sendRequest(url)
+  local url = BASE_URL .. '/sendChatAction?chat_id=' .. chat_id .. '&action=' .. action
+  return sendRequest(url)
 
 end
 
 sendLocation = function(chat_id, latitude, longitude, reply_to_message_id)
 
-	local url = BASE_URL .. '/sendLocation?chat_id=' .. chat_id .. '&latitude=' .. latitude .. '&longitude=' .. longitude
+  local url = BASE_URL .. '/sendLocation?chat_id=' .. chat_id .. '&latitude=' .. latitude .. '&longitude=' .. longitude
 
-	if reply_to_message_id then
-		url = url .. '&reply_to_message_id=' .. reply_to_message_id
-	end
+  if reply_to_message_id then
+    url = url .. '&reply_to_message_id=' .. reply_to_message_id
+  end
 
-	return sendRequest(url)
+  return sendRequest(url)
 
 end
 
 forwardMessage = function(chat_id, from_chat_id, message_id)
 
-	local url = BASE_URL .. '/forwardMessage?chat_id=' .. chat_id .. '&from_chat_id=' .. from_chat_id .. '&message_id=' .. message_id
+  local url = BASE_URL .. '/forwardMessage?chat_id=' .. chat_id .. '&from_chat_id=' .. from_chat_id .. '&message_id=' .. message_id
 
-	return sendRequest(url)
+  return sendRequest(url)
 
 end
 
 curlRequest = function(curl_command)
 
-	local dat = io.popen(curl_command):read('*all')
-	local tab = JSON.decode(dat)
+  local dat = io.popen(curl_command):read('*all')
+  local tab = JSON.decode(dat)
 
-	if not tab.ok then
-		return false, tab.description
-	end
+  if not tab.ok then
+    return false, tab.description
+  end
 
-	return tab
+  return tab
 
 end
 
 sendPhoto = function(chat_id, photo, caption, reply_to_message_id)
 
-	local url = BASE_URL .. '/sendPhoto'
+  local url = BASE_URL .. '/sendPhoto'
 
-	local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
+  local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
 
-	if reply_to_message_id then
-		curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-	end
+  if reply_to_message_id then
+    curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+  end
 
-	if caption then
-		curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
-	end
+  if caption then
+    curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
+  end
 
-	return curlRequest(curl_command)
+  return curlRequest(curl_command)
 
 end
 
 sendDocument = function(chat_id, document, reply_to_message_id)
 
-	local url = BASE_URL .. '/sendDocument'
+  local url = BASE_URL .. '/sendDocument'
 
-	local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
+  local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
 
-	if reply_to_message_id then
-		curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-	end
+  if reply_to_message_id then
+    curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+  end
 
-	return curlRequest(curl_command)
+  return curlRequest(curl_command)
 
 end
 
 sendSticker = function(chat_id, sticker, reply_to_message_id)
 
-	local url = BASE_URL .. '/sendSticker'
+  local url = BASE_URL .. '/sendSticker'
 
-	local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
+  local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
 
-	if reply_to_message_id then
-		curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-	end
+  if reply_to_message_id then
+    curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+  end
 
-	return curlRequest(curl_command)
+  return curlRequest(curl_command)
 
 end
 
 sendAudio = function(chat_id, audio, reply_to_message_id, duration, performer, title)
 
-	local url = BASE_URL .. '/sendAudio'
+  local url = BASE_URL .. '/sendAudio'
 
-	local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
+  local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
 
-	if reply_to_message_id then
-		curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-	end
+  if reply_to_message_id then
+    curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+  end
 
-	if duration then
-		curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
-	end
+  if duration then
+    curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+  end
 
-	if performer then
-		curl_command = curl_command .. ' -F "performer=' .. performer .. '"'
-	end
+  if performer then
+    curl_command = curl_command .. ' -F "performer=' .. performer .. '"'
+  end
 
-	if title then
-		curl_command = curl_command .. ' -F "title=' .. title .. '"'
-	end
+  if title then
+    curl_command = curl_command .. ' -F "title=' .. title .. '"'
+  end
 
-	return curlRequest(curl_command)
+  return curlRequest(curl_command)
 
 end
 
 sendVideo = function(chat_id, video, reply_to_message_id, duration, performer, title)
 
-	local url = BASE_URL .. '/sendVideo'
+  local url = BASE_URL .. '/sendVideo'
 
-	local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
+  local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
 
-	if reply_to_message_id then
-		curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-	end
+  if reply_to_message_id then
+    curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+  end
 
-	if caption then
-		curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
-	end
+  if caption then
+    curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
+  end
 
-	if duration then
-		curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
-	end
+  if duration then
+    curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+  end
 
-	return curlRequest(curl_command)
+  return curlRequest(curl_command)
 
 end
 
 sendVoice = function(chat_id, voice, reply_to_message_id)
 
-	local url = BASE_URL .. '/sendVoice'
+  local url = BASE_URL .. '/sendVoice'
 
-	local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
+  local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
 
-	if reply_to_message_id then
-		curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-	end
+  if reply_to_message_id then
+    curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+  end
 
-	if duration then
-		curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
-	end
+  if duration then
+    curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+  end
 
-	return curlRequest(curl_command)
+  return curlRequest(curl_command)
 
 end
