@@ -3,41 +3,41 @@
 
 local blacklist = load_data('blacklist.json')
 local action = function(msg)
-  if blacklist[msg.from.id_str] then
-    return -- End if the sender is blacklisted.
-  end
+	if blacklist[msg.from.id_str] then
+		return -- End if the sender is blacklisted.
+	end
 
-  if not string.match(msg.text_lower, '^/blacklist') then
-    return true
-  end
+	if not string.match(msg.text_lower, '^/blacklist') then
+		return true
+	end
 
-  if msg.from.id ~= config.admin then
-    return -- End if the user isn't admin.
-  end
+	if msg.from.id ~= config.admin then
+		return -- End if the user isn't admin.
+	end
 
-  local input = msg.text:input()
-  if not input then
-    if msg.reply_to_message then
-      input = tostring(msg.reply_to_message.from.id)
-    else
-      sendReply(msg, 'You must use this command via reply or by specifying a user\'s ID.')
-      return
-    end
-  end
+	local input = msg.text:input()
+	if not input then
+		if msg.reply_to_message then
+			input = tostring(msg.reply_to_message.from.id)
+		else
+			sendReply(msg, 'You must use this command via reply or by specifying a user\'s ID.')
+			return
+		end
+	end
 
-  if blacklist[input] then
-    blacklist[input] = nil
-    sendReply(msg, input .. ' has been removed from the blacklist.')
-  else
-    blacklist[input] = true
-    sendReply(msg, input .. ' has been added to the blacklist.')
-  end
-  save_data('blacklist.json', blacklist)
+	if blacklist[input] then
+		blacklist[input] = nil
+		sendReply(msg, input .. ' has been removed from the blacklist.')
+	else
+		blacklist[input] = true
+		sendReply(msg, input .. ' has been added to the blacklist.')
+	end
+	save_data('blacklist.json', blacklist)
 end
 
 return {
-  action = action,
-  triggers = {
-    ''
-  }
+	action = action,
+	triggers = {
+		''
+	}
 }

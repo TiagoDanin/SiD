@@ -26,7 +26,7 @@ software for all its users.
 When we speak of free software, we are referring to freedom, not
 price. Our General Public Licenses are designed to make sure that you
 have the freedom to distribute copies of free software (and charge for
-  them if you wish), that you receive source code or can get it if you
+	them if you wish), that you receive source code or can get it if you
 want it, that you can change the software or use pieces of it in new
 free programs, and that you know you can do these things.
 
@@ -98,7 +98,7 @@ An interactive user interface displays "Appropriate Legal Notices"
 to the extent that it includes a convenient and prominently visible
 feature that (1) displays an appropriate copyright notice, and (2)
 tells the user that there is no warranty for the work (except to the
-  extent that warranties are provided), that licensees may convey the
+	extent that warranties are provided), that licensees may convey the
 work under this License, and how to view a copy of this License. If
 the interface presents a list of user commands or options, such as a
 menu, a prominent item in the list meets this criterion.
@@ -127,7 +127,7 @@ produce the work, or an object code interpreter used to run it.
 
 The "Corresponding Source" for a work in object code form means all
 the source code needed to generate, install, and (for an executable
-  work) run the object code and to modify the work, including scripts to
+	work) run the object code and to modify the work, including scripts to
 control those activities. However, it does not include the work's
 System Libraries, or general-purpose tools or generally available free
 programs which are used unmodified in performing those activities but
@@ -161,51 +161,51 @@ in force. You may convey covered works to others for the sole purpose
 of having them make modifications exclusively for you, or provide you
 with facilities for running those works, provided that you comply with
 the terms of this License in conveying all material for which you do
-  not control copyright. Those thus making or running the covered works
-  for you must do so exclusively on your behalf, under your direction
-  and control, on terms that prohibit them from making any copies of
-  your copyrighted material outside their relationship with you.
+	not control copyright. Those thus making or running the covered works
+	for you must do so exclusively on your behalf, under your direction
+	and control, on terms that prohibit them from making any copies of
+	your copyrighted material outside their relationship with you.
 
-  Conveying under any other circumstances is permitted solely under
-  the conditions stated below. Sublicensing is not allowed; section 10
-  makes it unnecessary.
+	Conveying under any other circumstances is permitted solely under
+	the conditions stated below. Sublicensing is not allowed; section 10
+	makes it unnecessary.
 
-  3. Protecting Users' Legal Rights From Anti-Circumvention Law.
+	3. Protecting Users' Legal Rights From Anti-Circumvention Law.
 
-  No covered work shall be deemed part of an effective technological
-  measure under any applicable law fulfilling obligations under article
-  11 of the WIPO copyright treaty adopted on 20 December 1996, or
-  similar laws prohibiting or restricting circumvention of such
-  measures.
+	No covered work shall be deemed part of an effective technological
+	measure under any applicable law fulfilling obligations under article
+	11 of the WIPO copyright treaty adopted on 20 December 1996, or
+	similar laws prohibiting or restricting circumvention of such
+	measures.
 
-  When you convey a covered work, you waive any legal power to forbid
-  circumvention of technological measures to the extent such circumvention
-  is effected by exercising rights under this License with respect to
-  the covered work, and you disclaim any intention to limit operation or
-  modification of the work as a means of enforcing, against the work's
-  users, your or third parties' legal rights to forbid circumvention of
-  technological measures.
+	When you convey a covered work, you waive any legal power to forbid
+	circumvention of technological measures to the extent such circumvention
+	is effected by exercising rights under this License with respect to
+	the covered work, and you disclaim any intention to limit operation or
+	modification of the work as a means of enforcing, against the work's
+	users, your or third parties' legal rights to forbid circumvention of
+	technological measures.
 
-  4. Conveying Verbatim Copies.
+	4. Conveying Verbatim Copies.
 
-  You may convey verbatim copies of the Program's source code as you
-  receive it, in any medium, provided that you conspicuously and
-  appropriately publish on each copy an appropriate copyright notice;
-  keep intact all notices stating that this License and any
-  non-permissive terms added in accord with section 7 apply to the code;
-  keep intact all notices of the absence of any warranty; and give all
-  recipients a copy of this License along with the Program.
+	You may convey verbatim copies of the Program's source code as you
+	receive it, in any medium, provided that you conspicuously and
+	appropriately publish on each copy an appropriate copyright notice;
+	keep intact all notices stating that this License and any
+	non-permissive terms added in accord with section 7 apply to the code;
+	keep intact all notices of the absence of any warranty; and give all
+	recipients a copy of this License along with the Program.
 
-  You may charge any price or no price for each copy that you convey,
-  and you may offer support or warranty protection for a fee.
+	You may charge any price or no price for each copy that you convey,
+	and you may offer support or warranty protection for a fee.
 
-  5. Conveying Modified Source Versions.
+	5. Conveying Modified Source Versions.
 
-  You may convey a work based on the Program, or the modifications to
-  produce it from the Program, in the form of source code under the
-  terms of section 4, provided that you also meet all of these conditions:
+	You may convey a work based on the Program, or the modifications to
+	produce it from the Program, in the form of source code under the
+	terms of section 4, provided that you also meet all of these conditions:
 
-  a) The work must carry prominent notices stating that you modified
+	a) The work must carry prominent notices stating that you modified
 it, and giving a relevant date.
 
 b) The work must carry prominent notices stating that it is

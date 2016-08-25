@@ -1,8 +1,10 @@
 ## SiDV4
 
-[SiDbotV5](telegram.me/sidbot) Based [jack-telegram-bot](https://github.com/SEEDTEAM/jack-telegram-bot) ❤️
+**Version4 Discontinued, GO [SiDBotV5.2](https://github.com/TiagoDanin/SiDBot/)**
 
-[RepoV5](https://gitlab.com/TiagoDanin/SiDBot) To access the repo contact me with your username (gitlab)
+[SiDbotV5.1](telegram.me/sidbot) Based [jack-telegram-bot](https://github.com/SEEDTEAM/jack-telegram-bot) ❤️
+
+[RepoV5.2](https://github.com/TiagoDanin/SiDBot/)
 
 Logo design by [Everton.arts](https://www.facebook.com/Evertonarts-693615497441103)
 
