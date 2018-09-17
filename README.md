@@ -1,6 +1,6 @@
 ## SiDV4
 
-- Version4 Discontinued, GO [SiDBotV5.2](https://github.com/TiagoDanin/SiDBot/)
+- 🚧 Project Discontinued
 - Logo design by [Everton.arts](https://www.facebook.com/Evertonarts-693615497441103)
 - SiDBot V4 Based on otouto v3.2 by topkecleon
 - Multi language :)
